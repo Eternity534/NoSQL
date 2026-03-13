@@ -10,7 +10,6 @@ def init_mongo_connection():
     """
     Fonction initialisant la connexion avec la BDD mongo.
     Initialisation de la db `entertainment` et `films`
-
     """
     # .streamlit/secrets.toml in app/
     mongo = pymongo.MongoClient(**st.secrets["mongo"])
@@ -26,6 +25,7 @@ def load_data(collection, json_path="../data/movies.json"):
     """
     if collection.count_documents({}) > 0:
         return
+    
     data = []
     with open(json_path, "r", encoding="utf-8") as f:
         for line in f:
