@@ -2,3 +2,4 @@ venv/
 .venv/
 .mypy_cache/
 .streamlit/
+__pycache__

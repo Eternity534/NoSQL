@@ -9,7 +9,6 @@ services:
       - "27017:27017"
     volumes:
       - mongodb_data:/data/db
-      - ./data/movies.json:/data.json
   neo4j:
     image: neo4j:5.26.22-community-ubi9
     restart: always
