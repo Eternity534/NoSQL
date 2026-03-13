@@ -1,69 +1,46 @@
-from typing import final
-import pymongo
-import streamlit as st
-from pymongo import MongoClient
+from flask_pymongo import PyMongo
+from dotenv import load_dotenv
+import os
 import json
 
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "../app/.env"))
+mongo = PyMongo()
 
-@st.cache_resource
-def init_mongo_connection():
+
+def init_db(app):
     """
-    Fonction initialisant la connexion avec la BDD mongo.
-    Initialisation de la db `entertainment` et `films`
+    Initialisation de la connexion avec mongo
     """
-    # .streamlit/secrets.toml in app/
-    mongo = pymongo.MongoClient(**st.secrets["mongo"])
-    db = mongo["entertainment"]
-    collection = db["films"]
-    return mongo, collection
+    mongo_user = os.getenv("MONGO_USER")
+    mongo_password = os.getenv("MONGO_PASSWORD")
+    mongo_host = os.getenv("MONGO_HOST")
+    mongo_port = os.getenv("MONGO_PORT")
+    mongo_db = os.getenv("MONGO_DB")
+
+    app.config["MONGO_URI"] = (
+        f"mongodb://{mongo_user}:{mongo_password}@{mongo_host}:{mongo_port}/{mongo_db}"
+        f"?authSource=admin"
+    )
+    collection_name = "films"
+    if not collection_name:
+        mongo.db.create_collection(collection_name)
+
+    mongo.init_app(app)
+    return mongo
 
 
-def load_data(collection, json_path="../data/movies.json"):
+def load_data(json_path="../data/movies.json"):
     """
     Ajout des données de la base par défaut.
     Cinéma
     """
+    collection = mongo.db.films
     if collection.count_documents({}) > 0:
         return
-    
+
     data = []
     with open(json_path, "r", encoding="utf-8") as f:
         for line in f:
             data.append(json.loads(line))
-    collection.insert_many(data)
-
-
-"""
-def connectionDB():
-    mongoUri = os.getenv("MONGO_URI")
-    neo4jUri = "neo4j+s://0f675ee5cdb0dea7179c259604399722.bolt.neo4jsandbox.com:443"  # os.getenv("NEO4J_URI") pb connexion à régler
-    neo4jAuth = (os.getenv("NEO4J_USER"), os.getenv("NEO4J_MDP"))
-
-    mongo_client = MongoClient(
-        mongoUri,
-        server_api=ServerApi(version="1", strict=True, deprecation_errors=True),
-    )
-
-    neo4j_client = GraphDatabase.driver(neo4jUri, auth=neo4jAuth)
-
-    return mongo_client, neo4j_client
-
-
-if __name__ == "__main__":
-    try:
-        mongo, neo4j = connectionDB()
-
-        # test mongo
-        mongo.admin.command("ping")
-        print("Connexion réussi à MongoDB")
-
-        # test neo4j
-        neo4j.verify_connectivity()
-        print("Connexion réussi à Neo4j")
-
-    except Exception as e:
-        print(f"erreur de connexion : {e}")
-    finally:
-        mongo.close()
-        neo4j.close()
-"""
+    if data:
+        collection.insert_many(data)

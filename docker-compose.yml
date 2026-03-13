@@ -1,6 +1,6 @@
 services:
   mongo:
-    image: mongo:latest
+    image: mongo:6.0
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: root 
@@ -8,7 +8,8 @@ services:
     ports: 
       - "27017:27017"
     volumes:
-      - mongodb_data:/data/db
+      - mongo_data:/data/db
+    
   neo4j:
     image: neo4j:5.26.22-community-ubi9
     restart: always
@@ -17,4 +18,4 @@ services:
       - "7687:7687"  # Port pour Bolt
 
 volumes:
-  mongodb_data:
+  mongo_data: 
