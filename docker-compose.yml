@@ -1,0 +1,21 @@
+services:
+  mongo:
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root 
+      MONGO_INITDB_ROOT_PASSWORD: root 
+    ports: 
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - ./data/movies.json:/data.json
+  neo4j:
+    image: neo4j:5.26.22-community-ubi9
+    restart: always
+    ports:
+      - "7474:7474"  # Port pour l'interface web
+      - "7687:7687"  # Port pour Bolt
+
+volumes:
+  mongodb_data:
