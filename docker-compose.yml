@@ -16,6 +16,11 @@ services:
     ports:
       - "7474:7474"  # Port pour l'interface web
       - "7687:7687"  # Port pour Bolt
+    volumes:
+      - neo4j_data:/data/:rw
+      - neo4j_conf:/conf:ro
 
 volumes:
-  mongo_data: 
+  mongo_data:
+  neo4j_data:
+  neo4j_conf:

@@ -34,13 +34,12 @@ source ./venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Framework streamlit
+## Docker configurations :
 
-```bash
-# Lancement du script python `streamlit_app.py`
-streamlit run
-```
+#### Neo4j
 
-## Base de donnée
+Volumes :
 
-Les secrets sont géré dans un fichier toml `.streamlit/secrets.toml`
+- mongo_data : `/data/db` (garde en mémoire les modifications de la base de données après la première initialisation)
+- neo4j_data : `/data/` (garde en mémoire les modifications de la db après destruction du docker )
+- neo4j_config: `/conf/` (permet d'accelerer le lancement de l'image )
