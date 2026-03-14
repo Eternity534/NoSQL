@@ -1,7 +1,6 @@
-from flask import Flask
+from flask import Flask, jsonify
 from app.backend.database import init_db, load_mongo_data
 from os import environ
-from flask import jsonify
 
 app = Flask(__name__)
 SECRET = environ.get("SECRETKEY", "ez")
