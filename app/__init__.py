@@ -21,10 +21,16 @@ SECRET_KEY=SECRET,
 mongo = init_db(app)
 load_data()
 
+from app.routes import bp
 
+app.register_blueprint(bp)
+
+"""
 @app.route("/")
 def index():
     films = list(
         mongo.db.films.find({}, {"_id": 0})
     )  # exclude _id (not JSON serializable)
     return jsonify(films)
+
+"""

@@ -1,24 +1,17 @@
-#contient toutes les requêtes pour mongodb et neo4js
+from app.backend.database import mongo
 
-#Q1 : Affiche l'année où le plus grand nombre de films ont été sortis
-def query1(mongo):
+# contient toutes les requêtes pour mongodb et neo4js
+
+
+# Q1 : Affiche l'année où le plus grand nombre de films ont été sortis
+def query1():
     pipeline = [
-        {
-            "$group": {
-                "_id": "$year",
-                "movie_count": {"$sum": 1}
-            }
-        },
-        {
-            "$sort": {
-                "movie_count": -1
-            }
-        },
-        {
-            "$limit": 1
-        }
+        {"$group": {"_id": "$year", "movie_count": {"$sum": 1}}},
+        {"$sort": {"movie_count": -1}},
+        {"$limit": 1},
     ]
-    return list(mongo.aggregate(pipeline))
+    return list(mongo.db.films.aggregate(pipeline))
+
 
 """
 #Q2 : Affiche le nombre de films sortis après 1999
