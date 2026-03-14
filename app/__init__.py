@@ -1,5 +1,5 @@
 from flask import Flask
-from app.backend.database import init_db, load_data
+from app.backend.database import init_db, load_mongo_data
 from os import environ
 from flask import jsonify
 
@@ -19,7 +19,7 @@ SECRET_KEY=SECRET,
 )
 """
 mongo = init_db(app)
-load_data()
+load_mongo_data()
 
 from app.routes import bp
 
