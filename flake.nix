@@ -25,6 +25,7 @@
           pkgs.python313Packages.flask
           pkgs.python313Packages.pymongo
           pkgs.python313Packages.pip
+          pkgs.python313Packages.neo4j
         ];
 
         shellHook = ''
