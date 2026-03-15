@@ -1,4 +1,5 @@
 from flask_pymongo import PyMongo
+from neo4j import GraphDatabase
 from dotenv import load_dotenv
 import os
 import json
@@ -44,3 +45,42 @@ def load_mongo_data(json_path="../data/movies.json"):
             data.append(json.loads(line))
     if data:
         collection.insert_many(data)
+
+def load_neo4j_data():
+    """
+    Importe la data de mongoDB
+    Créer les noeuds et relations neo4j
+    """
+    neo4j_uri = os.getenv(NEO4J_URI)
+    neo4j_user = os.getenv(NEO4J_USER)
+    neo4j_password = os.getenv(NEO4J_PASSWORD)
+
+    REQUEST = """
+    CALL apoc.mongodb.find('mongodb://localhost:27017', 'entertainment', 'films', {}) YIELD value
+    MERGE (f:films {_id: toString(value._id), title: value.title, year: value.year, votes: value.Votes, revenue: value.`Revenue (Millions)`, rating: value.rating, director: value.Director})
+    MERGE (r:Realisateur {director: value.Director})
+    WITH f, value WHERE value.Actors IS NOT NULL
+    UNWIND split(value.Actors, ",") AS single_actor
+    WITH f, trim(single_actor) AS name_actor
+    MERGE (a:Actors {actor: name_actor})
+    MERGE (a)-[:A_JOUER]->(f)
+    RETURN count(f) AS films_traites
+    """
+
+    REQUEST_TEAM = """
+    MERGE (a1:Actors {actor: "Louis Minotte"})
+    MERGE (a2:Actors {actor: "Paul Ballagny"})
+    WITH a1, a2
+    MATCH (f1:films {title: "Rogue One"})
+    MATCH (f2:films {title: "Moana"})
+    MERGE (a1)-[:A_JOUER]->(f1)
+    MERGE (a2)-[:A_JOUER]->(f2)
+    RETURN a1.actor, a2.actor
+    """
+
+    driver = GraphDatabase.driver(neo4j_uri, auth=(neo4j_user, neo4j_password))
+    with driver.session() as session:
+        session.run(REQUEST)
+        session.run(REQUEST_TEAM)
+
+
