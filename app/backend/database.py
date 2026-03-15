@@ -55,15 +55,28 @@ def load_neo4j_data():
     neo4j_user = os.getenv("NEO4J_USER")
     neo4j_password = os.getenv("NEO4J_PASSWORD")
 
+    collection_movies = mongo.db.films #récupération du json de mongo
+    movies = [] 
+    for doc in collection_movies.find({}): #envoie la data dans un array pour neo4j
+        doc["_id"] = str(doc["_id"])
+        movies.append(doc)
+
     REQUEST = """
-    CALL apoc.mongodb.find('mongodb://localhost:27017', 'entertainment', 'films', {}) YIELD value
-    MERGE (f:films {_id: toString(value._id), title: value.title, year: value.year, votes: value.Votes, revenue: value.`Revenue (Millions)`, rating: value.rating, director: value.Director})
+    UNWIND $list_movies AS value
+    MERGE (f:films {_id: toString(value._id)}) //créer un noeud films pour chaque doc de la db
+    SET f.title = value.title,
+        f.year = value.year,
+        f.votes = value.Votes,
+        f.revenue = value.`Revenue (Millions)`,
+        f.rating = value.rating,
+        f.director = value.Director
+    WITH f, value WHERE value.Director IS NOT NULL //créer un noeud Realisateur pour chaque director de la db
     MERGE (r:Realisateur {director: value.Director})
-    WITH f, value WHERE value.Actors IS NOT NULL
-    UNWIND split(value.Actors, ",") AS single_actor
+    WITH f, value WHERE value.Actors IS NOT NULL //créer un noeud Actors pour chaque acteur de la db
+    UNWIND split(value.Actors, ",") AS single_actor //isole les acteurs
     WITH f, trim(single_actor) AS name_actor
     MERGE (a:Actors {actor: name_actor})
-    MERGE (a)-[:A_JOUER]->(f)
+    MERGE (a)-[:A_JOUER]->(f) //fait la relation acteur -> film
     RETURN count(f) AS films_traites
     """
 
@@ -80,7 +93,7 @@ def load_neo4j_data():
 
     driver = GraphDatabase.driver(neo4j_uri, auth=(neo4j_user, neo4j_password))
     with driver.session() as session:
-        session.run(REQUEST)
+        session.run(REQUEST, list_movies=movies)
         session.run(REQUEST_TEAM)
 
 

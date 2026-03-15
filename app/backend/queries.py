@@ -1,6 +1,6 @@
 from app.backend.database import mongo
 
-
+#Queries MongoDB
 def query1():
     """
     Q1 : Affiche l'année où le plus grand nombre de films ont été sortis
@@ -165,3 +165,73 @@ def query13():
         {"$sort": {"decennie": 1}},
     ]
     return list(mongo.db.films.aggregate(pipeline))
+
+#Queries Neo4j
+def query14():
+    """
+    """
+
+def query15():
+    """
+    """
+
+def query16():
+    """
+    """
+
+def query17():
+    """
+    """
+
+def query18():
+    """
+    """
+
+def query19():
+    """
+    """
+
+def query20():
+    """
+    """
+
+def query21():
+    """
+    """
+
+def query22():
+    """
+    """
+
+def query23():
+    """
+    """
+
+def query24():
+    """
+    """
+
+def query25():
+    """
+    """
+
+def query26():
+    """
+    """
+
+#Queries transversales
+def query27():
+    """
+    """
+
+def query28():
+    """
+    """
+
+def query29():
+    """
+    """
+
+def query30():
+    """
+    """
