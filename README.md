@@ -3,21 +3,24 @@
 ## Architecture du Projet
 
 Le projet s'organise de la façon suivante :
- .
-├──  app
-│ ├──  backend
-│ │ ├──  database.py
-│ │ └──  queries.py
-│ ├──  static
-│ ├──  templates
-│ │ └──  index.html
-│ ├──  **init**.py
-│ └──  routes.py
-├──  data
-│ └──  movies.json
-├──  docker-compose.yml
-├── 󰂺 README.md
-└──  requirements.txt
+
+```
+.
+├── app
+│   ├── backend
+│   │   ├── database.py
+│   │   └── queries.py
+│   ├── static
+│   ├── templates
+│   │   └── index.html
+│   ├── __init__.py
+│   └── routes.py
+├── data
+│   └── movies.json
+├── docker-compose.yml
+├── README.md
+└── requirements.txt
+```
 
 ## Initialisation du projet
 

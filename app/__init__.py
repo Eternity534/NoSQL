@@ -22,14 +22,5 @@ load_mongo_data()
 
 from app.routes import bp
 
+# Enregistrement automatique dans l'application flask des routes dans le fichier routes.py
 app.register_blueprint(bp)
-
-"""
-@app.route("/")
-def index():
-    films = list(
-        mongo.db.films.find({}, {"_id": 0})
-    )  # exclude _id (not JSON serializable)
-    return jsonify(films)
-
-"""
