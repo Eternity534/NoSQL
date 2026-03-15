@@ -51,9 +51,9 @@ def load_neo4j_data():
     Importe la data de mongoDB
     Créer les noeuds et relations neo4j
     """
-    neo4j_uri = os.getenv(NEO4J_URI)
-    neo4j_user = os.getenv(NEO4J_USER)
-    neo4j_password = os.getenv(NEO4J_PASSWORD)
+    neo4j_uri = os.getenv("NEO4J_URI")
+    neo4j_user = os.getenv("NEO4J_USER")
+    neo4j_password = os.getenv("NEO4J_PASSWORD")
 
     REQUEST = """
     CALL apoc.mongodb.find('mongodb://localhost:27017', 'entertainment', 'films', {}) YIELD value
