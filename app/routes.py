@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, render_template, Response
-from app.backend.queries import *
+from app.backend.queries.mongodb import *
 from app.backend.stats import movies_years_histogramm
 
 bp = Blueprint("main", __name__)
@@ -7,8 +7,9 @@ bp = Blueprint("main", __name__)
 
 @bp.route("/")
 def index():
-    films = query1()
-    return render_template("index.html", films=films)
+    return render_template(
+        "index.html", q1=query1(), q2=query2(), q3=query3(), q5=query5(), q6=query6()
+    )
 
 
 # API routes :

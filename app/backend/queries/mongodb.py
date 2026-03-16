@@ -1,5 +1,6 @@
 from app.backend.database import mongo
 
+
 def query1():
     """
     Q1 : Affiche l'année où le plus grand nombre de films ont été sortis
@@ -17,8 +18,8 @@ def query2():
     Q2 : Affiche le nombre de films sortis après 1999
     """
     pipeline = [
-        {"$match": {"year": {"$gt": "1999"}}},
-        {"$group": {"_id": None, "movie_count": {"$sum": 1}}},
+        {"$match": {"year": {"$gt": 1999}}},
+        {"$group": {"_id": 0, "movie_count": {"$sum": 1}}},
     ]
     return list(mongo.db.films.aggregate(pipeline))
 
@@ -28,8 +29,8 @@ def query3():
     Q3 : Renvoie la moyenne des votes des films sortis en 2007
     """
     pipeline = [
-        {"$match": {"year": "2007"}},
-        {"$group": {"_id": None, "avg_votes": {"$avg": 1}}},
+        {"$match": {"year": 2007}},
+        {"$group": {"_id": 0, "avg_votes": {"$avg": "$Votes"}}},
     ]
     return list(mongo.db.films.aggregate(pipeline))
 
@@ -46,14 +47,26 @@ def query5():
     """
     Q5 : Renvoie les genres de films étant dans la base de données
     """
-    return list(mongo.db.filmsfind({}, {"_id": 0, "genre": 1}))
+    pipeline = [
+        {"$project": {"genres": {"$split": ["$genre", ","]}}},
+        {"$unwind": "$genres"},
+        {"$group": {"_id": {"$trim": {"input": "$genres"}}}},  # supprime les espaces
+        {"$sort": {"_id": 1}},
+    ]
+    return list(mongo.db.films.aggregate(pipeline))
 
 
 def query6():
     """
     Q6 : Renvoie le film qui a généré le plus de revenu
     """
-    return list(mongo.db.films.find({}).sort("Revenue (Millions)", -1).limit(1))
+    pipeline = [
+        {"$match": {"Revenue (Millions)": {"$exists": True, "$nin": [None, ""]}}},
+        {"$project": {"_id": 0, "title": 1, "year": 1, "rev": "$Revenue (Millions)"}},
+        {"$sort": {"rev": -1}},
+        {"$limit": 1},
+    ]
+    return list(mongo.db.films.aggregate(pipeline))
 
 
 def query7():
@@ -164,3 +177,4 @@ def query13():
         {"$sort": {"decennie": 1}},
     ]
     return list(mongo.db.films.aggregate(pipeline))
+

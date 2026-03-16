@@ -46,3 +46,7 @@ Volumes :
 - mongo_data : `/data/db` (garde en mémoire les modifications de la base de données après la première initialisation)
 - neo4j_data : `/data/` (garde en mémoire les modifications de la db après destruction du docker )
 - neo4j_config: `/conf/` (permet d'accelerer le lancement de l'image )
+
+## TODO :
+
+CREER UN FORMULAIRE POUR ajouter supprimer et modifier les données d'un films

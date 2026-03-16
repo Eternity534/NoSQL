@@ -9,11 +9,52 @@
 		<link href="css/style.css" rel="stylesheet">
 	</head>
 	<body>
-		<p>
-			{{films[0].movie_count}}
-		</p>
 
-		<h2>Histogramme représentant le nombres de films par année</h2>
+		<h1>Requetes de la base de donnée Mongo</h1>
+		<div>
+			<h2>Question 1 :</h2>
+			<h3>Année avec le plus grand nombre de sorties</h3>
+			<span class="result">
+				Il y a eu {{ q1[0].movie_count }} films sortie en {{ q1[0]._id}}
+			</span>
+		
+		</div>
+
+		<div>
+			<h2>Question 2 :</h2>
+			<h3>Nombre de films sortis après 1999</h3>
+			<span class="result">
+          Il y a eu {{ q2[0].movie_count }} films sortie après 1999 
+      </span>
+					</div>
+    <div>
+      <h2> Question 3 </h2>
+      <h3> Quelle est la moyenne des votes des films sortis en 2007 </h3>
+      <span class="result" >
+        La moyenne des votes de films est de : {{ q3[0].avg_votes}} 
+      </span>
+    </div>
+		<div>
+    <h2> Question 4 </h2>
+    <h3>Histogramme représentant le nombres de films par année</h2>
 		<img src="/histogram/movies-per-years" alt="movies_years_histogramm">
-	</body>
+    </div>
+    <div> 
+      <h2> Question 5 </h2>
+    <h3> Quelles sont les genres de films disponibles dans la bases </h3>
+       <h4>Genre :</h4>
+        <ul>
+        {% for genre in q5 %}
+        <li>{{ genre._id }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div>
+      <h2> Question 6 </h2>
+      <h3> Quelle film a généré le plus  ?</h3>
+      <span class="result" >
+Le film ayant le plus généré est <strong>{{ q6[0].title }}</strong>({{ q6[0].year }}) qui a généré {{q6[0].rev}} millions. 
+      </span>
+    </div>
+</body>
 </html>
