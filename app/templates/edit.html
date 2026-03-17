@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Modifications — CinémaDB</title>
+		<link href="../static/css/main.css" rel="stylesheet">
+	</head>
+	<body>
+
+		{% include 'nav.html' %}
+
+		<h1>Modifications</h1>
+
+		{% with messages = get_flashed_messages(with_categories=true) %}
+		{% if messages %}
+		{% for category, message in messages %}
+		<div class="flash flash-{{ category }}">{{ message }}</div>
+		{% endfor %}
+		{% endif %}
+		{% endwith %}
+
+		<!-- ── Modifier un film ── -->
+		<div class="card">
+			<h2>
+				Modifier un film
+			</h2>
+			<h3>Sélectionner un film et modifier ses champs</h3>
+			<div class="form-body">
+				<form method="POST" action="/edit/update">
+
+					<div class="form-group">
+						<label for="update-title">Film à modifier</label>
+						<select id="update-title" name="title" required>
+							<option value="" disabled selected></option>
+							{% for film in all_films %}
+							<option value="{{ film.title }}">{{ film.title }} ({{ film.year }})</option>
+							{% endfor %}
+						</select>
+					</div>
+
+					<div class="form-row">
+						<div class="form-group">
+							<label for="update-field">Champ à modifier</label>
+							<select id="update-field" name="field" required>
+								<option value="" disabled selected></option>
+								<option value="title">Titre</option>
+								<option value="year">Année</option>
+								<option value="genre">Genre</option>
+								<option value="Director">Réalisateur</option>
+								<option value="Actors">Acteurs</option>
+								<option value="Runtime (Minutes)">Durée (minutes)</option>
+								<option value="Revenue (Millions)">Revenus (millions $)</option>
+								<option value="Metascore">Metascore</option>
+								<option value="Votes">Votes</option>
+								<option value="Description">Description</option>
+								<option value="rating">Classification</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="update-value">Nouvelle valeur</label>
+							<input type="text" id="update-value" name="value" placeholder="Nouvelle valeur..." required>
+						</div>
+					</div>
+
+					<div class="form-actions">
+						<button type="submit" class="btn btn-primary">Modifier</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<!-- ── Ajouter un film ── -->
+		<div class="card">
+			<h2>➕ Ajouter un film</h2>
+			<h3>Renseigner les informations du nouveau film</h3>
+			<div class="form-body">
+				<form method="POST" action="/edit/add">
+
+					<div class="form-row">
+						<div class="form-group">
+							<label for="add-title">Titre <span class="required">*</span></label>
+							<input type="text" id="add-title" name="title" placeholder="Ex: Inception" required>
+						</div>
+						<div class="form-group">
+							<label for="add-year">Année <span class="required">*</span></label>
+							<input type="number" id="add-year" name="year" placeholder="Ex: 2010" min="1900" max="2099" required>
+						</div>
+					</div>
+
+					<div class="form-row">
+						<div class="form-group">
+							<label for="add-genre">Genre <span class="required">*</span></label>
+							<input type="text" id="add-genre" name="genre" placeholder="Ex: Action,Drama">
+						</div>
+						<div class="form-group">
+							<label for="add-director">Réalisateur</label>
+							<input type="text" id="add-director" name="Director" placeholder="Ex: Christopher Nolan">
+						</div>
+					</div>
+
+					<div class="form-row">
+						<div class="form-group">
+							<label for="add-actors">Acteurs</label>
+							<input type="text" id="add-actors" name="Actors" placeholder="Ex: Leonardo DiCaprio, ...">
+						</div>
+						<div class="form-group">
+							<label for="add-rating">Classification</label>
+							<input type="text" id="add-rating" name="rating" placeholder="Ex: PG-13">
+						</div>
+					</div>
+
+					<div class="form-row">
+						<div class="form-group">
+							<label for="add-runtime">Durée (min)</label>
+							<input type="number" id="add-runtime" name="runtime" placeholder="Ex: 148" min="1">
+						</div>
+						<div class="form-group">
+							<label for="add-revenue">Revenus (M$)</label>
+							<input type="number" id="add-revenue" name="revenue" placeholder="Ex: 292.57" step="0.01" min="0">
+						</div>
+					</div>
+
+					<div class="form-row">
+						<div class="form-group">
+							<label for="add-metascore">Metascore</label>
+							<input type="number" id="add-metascore" name="metascore" placeholder="Ex: 74" min="0" max="100">
+						</div>
+						<div class="form-group">
+							<label for="add-votes">Votes</label>
+							<input type="number" id="add-votes" name="votes" placeholder="Ex: 200000" min="0">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="add-description">Description</label>
+						<textarea id="add-description" name="description" placeholder="Synopsis du film..." rows="3"></textarea>
+					</div>
+
+					<div class="form-actions">
+						<button type="submit" class="btn btn-success">Ajouter le film</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<!-- ── Supprimer un film ── -->
+		<div class="card">
+			<h2>🗑️ Supprimer un film</h2>
+			<h3>Sélectionner le film à supprimer</h3>
+			<div class="form-body">
+				<form method="POST" action="/edit/delete">
+
+					<div class="form-group">
+						<label for="delete-title">Film à supprimer</label>
+						<select id="delete-title" name="title" required>
+							<option value="" disabled selected>-- Sélectionner un film --</option>
+							{% for film in all_films %}
+							<option value="{{ film.title }}">{{ film.title }} ({{ film.year }})</option>
+							{% endfor %}
+						</select>
+					</div>
+
+					<div class="form-actions">
+						<button type="submit" class="btn btn-danger" onclick="return confirm('Supprimer ce film définitivement ?')">
+							Supprimer
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</body>
+</html>

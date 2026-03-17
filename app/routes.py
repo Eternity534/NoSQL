@@ -26,6 +26,12 @@ def index():
     )
 
 
+@bp.route("/edit")
+def edit():
+    all_films = list(mongo.db.films.find({}, {"_id": 0, "title": 1, "year": 1}))
+    return render_template("edit.html", all_films=all_films)
+
+
 # API routes :
 @bp.route("/histogram/movies-per-years")
 def movies_per_years():

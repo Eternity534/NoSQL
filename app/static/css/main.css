@@ -49,10 +49,6 @@ h1 {
   margin-right: auto;
 }
 
-h1::before {
-  content: "🎬  ";
-}
-
 /* ── Conteneur des cards ── */
 body > .card {
   max-width: 760px;
