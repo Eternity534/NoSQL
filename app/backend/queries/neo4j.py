@@ -26,7 +26,7 @@ def query15(driver):
     """
     with driver.session() as session:
         result = session.run(query)
-        return [record["co_actor_name"] for record in result]
+        return [record["actor_name"] for record in result]
 
 def query16(driver):
     """
@@ -51,7 +51,8 @@ def query17(driver):
     """
     with driver.session() as session:
         result = session.run(query)
-        return result
+        record = result.single()
+        return {"avg_votes": record["avg_votes"]}
 
 def query18():
     """
@@ -110,7 +111,7 @@ def query21(driver):
     """
     with driver.session() as session:
         result = session.run(query)
-        return [f"{rec['f1']} and {rec['f2']} share {rec['commonActors']} actors" for rec in result]
+        return [f"{rec['film1']} and {rec['film2']} share {rec['commonActors']} actors" for rec in result]
 
 def query22(driver):
     """
@@ -147,7 +148,6 @@ def query24(driver):
     WHERE r1 <> r2
     MATCH (f1:films {director: r1.director})<-[:A_JOUER]-(a:Actors)-[:A_JOUER]->(f2:films {director: r2.director})
     MERGE (r1)-[:INFLUENCE_PAR {raison: "Acteurs communs"}]->(r2)
-    RETURN count(*) AS nb_relations
     """
     with driver.session() as session:
         session.run(query)
