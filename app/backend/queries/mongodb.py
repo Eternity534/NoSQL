@@ -97,19 +97,25 @@ def query9():
     Q9 : Renvoie les 3 films les mieux notés pour chaque décennie
     """
     pipeline = [
-        {"$match": {"Metascore": {"$exists": True, "$type": "number"}}},
+        {"$match": {"Metascore": {"$exists": True, "$type": "int"}}},
         {"$sort": {"Metascore": -1}},
         {
-            "$group": {"_id": {"$subtract": ["$year", {"$mod": ["$year", 10]}]}},
-            "movies_info": {
-                "$push": {"title": "$title", "year": "$year", "rating": "$Metascore"}
-            },
+            "$group": {
+                "_id": {"$subtract": ["$year", {"$mod": ["$year", 10]}]},
+                "movies_info": {
+                    "$push": {
+                        "title": "$title",
+                        "year": "$year",
+                        "rating": "$Metascore",
+                    }
+                },
+            }
         },
         {
             "$project": {
                 "_id": 0,
                 "decennie": "$_id",
-                "top3_movies": {"$slice": ["movies_info", 3]},
+                "top3_movies": {"$slice": ["$movies_info", 3]},
             }
         },
         {"$sort": {"decennie": 1}},
@@ -177,4 +183,3 @@ def query13():
         {"$sort": {"decennie": 1}},
     ]
     return list(mongo.db.films.aggregate(pipeline))
-

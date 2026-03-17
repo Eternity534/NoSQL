@@ -3,58 +3,148 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>
-			Gestion de Cinéma
-		</title>
-		<link href="css/style.css" rel="stylesheet">
+		<title>Gestion de Cinéma</title>
+		<link href="../static/css/main.css" rel="stylesheet">
 	</head>
 	<body>
+		{% include 'nav.html' %}
 
 		<h1>Requetes de la base de donnée Mongo</h1>
-		<div>
+
+		<div class="card">
 			<h2>Question 1 :</h2>
-			<h3>Année avec le plus grand nombre de sorties</h3>
+			<h3>Afficher l'année où le plus grand nombre de films ont été sortis</h3>
 			<span class="result">
-				Il y a eu {{ q1[0].movie_count }} films sortie en {{ q1[0]._id}}
+				Il y a eu {{ q1[0].movie_count }} films sortie en {{ q1[0]._id }}
 			</span>
-		
 		</div>
 
-		<div>
+		<div class="card">
 			<h2>Question 2 :</h2>
-			<h3>Nombre de films sortis après 1999</h3>
+			<h3>Quel est le nombre de films sortis après l'année 1999</h3>
 			<span class="result">
-          Il y a eu {{ q2[0].movie_count }} films sortie après 1999 
-      </span>
-					</div>
-    <div>
-      <h2> Question 3 </h2>
-      <h3> Quelle est la moyenne des votes des films sortis en 2007 </h3>
-      <span class="result" >
-        La moyenne des votes de films est de : {{ q3[0].avg_votes}} 
-      </span>
-    </div>
-		<div>
-    <h2> Question 4 </h2>
-    <h3>Histogramme représentant le nombres de films par année</h2>
-		<img src="/histogram/movies-per-years" alt="movies_years_histogramm">
-    </div>
-    <div> 
-      <h2> Question 5 </h2>
-    <h3> Quelles sont les genres de films disponibles dans la bases </h3>
-       <h4>Genre :</h4>
-        <ul>
-        {% for genre in q5 %}
-        <li>{{ genre._id }}</li>
-      {% endfor %}
-    </ul>
-  </div>
-  <div>
-      <h2> Question 6 </h2>
-      <h3> Quelle film a généré le plus  ?</h3>
-      <span class="result" >
-Le film ayant le plus généré est <strong>{{ q6[0].title }}</strong>({{ q6[0].year }}) qui a généré {{q6[0].rev}} millions. 
-      </span>
-    </div>
-</body>
+				Il y a eu {{ q2[0].movie_count }} films sortie après 1999
+			</span>
+		</div>
+
+		<div class="card">
+			<h2>Question 3 :</h2>
+			<h3>Quelle est la moyenne des votes des films sortis en 2007</h3>
+			<span class="result">
+				La moyenne des votes de films est de : {{ q3[0].avg_votes }}
+			</span>
+		</div>
+
+		<div class="card">
+			<h2>Question 4 :</h2>
+			<h3>Affichez un histogramme qui permet de visualiser le nombres de films par année</h3>
+			<img src="/histogram/movies-per-years" alt="movies_years_histogramm">
+		</div>
+
+		<div class="card">
+			<h2>Question 5 :</h2>
+			<h3>Quelles sont les genres de films disponibles dans la bases</h3>
+			<h4>Genre :</h4>
+			<ul>
+				{% for genre in q5 %}
+				<li>{{ genre._id }}</li>
+				{% endfor %}
+			</ul>
+		</div>
+
+		<div class="card">
+			<h2>Question 6 :</h2>
+			<h3>Quel est le film qui a généré le plus de revenu</h3>
+			<span class="result">
+				Le film ayant le plus généré est <strong>{{ q6[0].title }}</strong>
+				({{ q6[0].year }}) qui a généré {{ q6[0].rev }} millions.
+			</span>
+		</div>
+
+		<div class="card">
+			<h2>Question 7 :</h2>
+			<h3>Quels sont les réalisateurs ayant réalisé plus de 5 films dans la base de données ?</h3>
+			{% if q7 %}
+			{% for director in q7 %}
+			<span class="result">
+				{{ director._id }} à réalisé {{ director.movie_count }} films <br>
+			</span>
+			{% endfor %}
+			{% else %}
+			<span>No result</span>
+			{% endif %}
+		</div>
+
+		<div class="card">
+			<h2>Question 8 :</h2>
+			<h3>Quel est le genre de film qui rapporte en moyenne le plus de revenus ?</h3>
+			{% if q8 %}
+			<span class="result">
+				Le genre <strong>{{ q8[0]._id }}</strong>
+				est celui qui rapporte le plus avec une moyenne de {{ q8[0].avg_revenu | round(2) }} millions.
+			</span>
+			{% else %}
+			<span>No result</span>
+			{% endif %}
+		</div>
+
+		<div class="card">
+			<h2>Question 9 :</h2>
+			<h3>Quels sont les 3 films les mieux notés (rating) pour chaque décennie (1990-1999, 2000-2009, etc.) ?</h3>
+			{% if q9 %}
+			{% for decade in q9 %}
+			<span class="result">
+				<strong>Décennie {{ decade.decennie }}s :</strong><br>
+				{% for movie in decade.top3_movies %}
+				&nbsp;&nbsp;{{ loop.index }}. {{ movie.title }} ({{ movie.year }}) — {{ movie.rating }}/100 <br>
+				{% endfor %}
+			</span>
+			{% endfor %}
+			{% else %}
+			<span>No result</span>
+			{% endif %}
+		</div>
+
+		<div class="card">
+			<h2>Question 10 :</h2>
+			<h3>Quel est le film le plus long (Runtime) par genre ?</h3>
+			{% if q10 %}
+			{% for item in q10 %}
+			<span class="result">
+				<strong>{{ item._id }}</strong>
+				: {{ item.title }} — {{ item.runtime }} minutes <br>
+			</span>
+			{% endfor %}
+			{% else %}
+			<span>No result</span>
+			{% endif %}
+		</div>
+
+		<div class="card">
+			<h2>Question 11 :</h2>
+			<h3>Films ayant une note supérieure à 80 (Metascore) et ayant généré plus de 50 millions de dollars</h3>
+			{% if q11 %}
+			{% for film in q11 %}
+			<span class="result">
+				<strong>{{ film.title }}</strong>
+				({{ film.year }}) — Metascore : {{ film.Metascore }} — Revenus : {{ film['Revenue (Millions)'] }} M$ <br>
+			</span>
+			{% endfor %}
+			{% else %}
+			<span>No result</span>
+			{% endif %}
+		</div>
+
+		<div class="card">
+			<h2>Question 12 :</h2>
+			<h3>Calculer la corrélation entre la durée des films (Runtime) et leur revenu (Revenue) — analyse statistique</h3>
+			<img src="/histogram/runtime-vs-revenue" alt="runtime_vs_revenue">
+		</div>
+
+		<div class="card">
+			<h2>Question 13 :</h2>
+			<h3>Y a-t-il une évolution de la durée moyenne des films par décennie ?</h3>
+			<img src="/histogram/avg-runtime-per-decade" alt="avg_runtime_per_decade">
+		</div>
+	</body>
 </html>
