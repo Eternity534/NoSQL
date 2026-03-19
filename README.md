@@ -35,27 +35,28 @@ Notre projet s'articule de la manière suivante :
 
 ### Explications du backend
 
-- `database.py`: ce fichier contient les fonctions python permettant la connexion aux bases de données _mongodb_ et _ne4j_.
+- `database.py`: ce fichier contient les fonctions python permettant la connexion aux bases de données _mongodb_ et _neo4j_.
   - `initdb(app)`: cette fonction gère l'initialisation de la connexion entre la base de données _mongo_ et notre application _flask_.
     Dans le cas où la base de données **entertainment** et la collections **films** sont vide, cette fonction vas appeler la fonction `load_mongo_data()`.
   - `load_mongo_data()`: cette fonction va prendre en entrée le fichier `../data/movies.json` qui contient les données par défaut de notre bases de films.
+  - `load_neo4j_data()`: cette fonction créée la connexion entre la base de données _neo4j_ et notre application _flask_. De plus, elle importe notre base de données _mongo_ dans notre base _neo4j_ et créée ainsi les noeuds et relations nécessaire pour nos requêtes.
 
-- `stats.py`: ce fichier contient les 3 fonctions permettant de généré dynamiquement les histogramme et graph demandées en utilisant les librairies **seaborn**, **matplotlib** et **numpy**
+- `stats.py`: ce fichier contient les 3 fonctions permettant de généré dynamiquement les histogrammes et graphes demandées en utilisant les librairies **seaborn**, **matplotlib** et **numpy**
 
 **queries/** :
 
-- `mongodb.py`: ce fichier contient les requetes faites à la base de données mongo suivant les données demandées dans l'énoncé du sujet.
-- `neo4j.py`: ce fichier propose la meme logique que `mongodb.py` mais pour les requetes à la base de données neo4j.
-- `transversal.py`: ce fichier contient toute les requetes transversal faites pour mongodb et neo4j_config
+- `mongodb.py`: ce fichier contient les requêtes faites à la base de données mongo suivant les données demandées dans l'énoncé du sujet.
+- `neo4j.py`: ce fichier propose la meme logique que `mongodb.py` mais pour les requêtes à la base de données neo4j.
+- `transversal.py`: ce fichier contient toute les requêtes transversales faites pour mongodb et neo4j.
 
 ### Explications du front-end
 
 **templates/** :
 
 - `index.html`: ce fichier contient l'affichage des parties avec _mongodb_.
-- `neo4j.html`:ce fichier contient également l'affichages des requetes mais cette fois pour _neo4j_
-- `transversal.html`: ce fichier contient l'affichage des requetes transverse pour _mongo_ et _neo4j_
-- `edit.html`: ce fichier contient les formulaires permettant de modifier, supprimer et ajouter des données dans la base de données _mongo_
+- `neo4j.html`: ce fichier contient également l'affichage des requêtes mais cette fois ci pour _neo4j_.
+- `transversal.html`: ce fichier contient l'affichage des requêtes transverse pour _mongo_ et _neo4j_.
+- `edit.html`: ce fichier contient les formulaires permettant de modifier, supprimer et ajouter des données dans la base de données _mongo_.
 - `nav.html`: ce fichier contient le menu de navigation réutilisé comme component.
 
 **static/css**:
@@ -88,10 +89,10 @@ Notre projet s'articule de la manière suivante :
 - neo4j_data : `/data/` (garde en mémoire les modifications de la db après destruction du docker )
 - neo4j_config: `/conf/` (permet d'accelerer le lancement de l'image )
 
-## Gestions des secrets
+## Gestion des secrets
 
 Les secrets de connexion aux différentes bases de données conteneurisé on été mise dans un fichier `.env`.
-Afin de facilité le deploiement de cette application voici un exemple de gestion de secret utilisé pour l'app(fichier `.env.prod`) :
+Afin de facilité le deploiement de cette application voici un exemple de gestion de secret utilisé pour l'app (fichier `.env.prod`) :
 
 ```.md
 MONGO_URI=mongodb://localhost:27017/entertainment
