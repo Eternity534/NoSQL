@@ -26,6 +26,7 @@ MEMBER_ACTOR_2 = "Paul Ballagny"
 # Acteur exemple
 ACTOR_1 = "Ben Affleck"
 ACTOR_2 = "Chris Pratt"
+driver = neo4j_connect_db()
 
 
 @bp.route("/")
@@ -47,7 +48,6 @@ def index():
 
 @bp.route("/neo4j")
 def neo4j():
-    driver = neo4j_connect_db()
     query24(driver)
     return render_template(
         "neo4j.html",
@@ -72,7 +72,6 @@ def transversal():
     """
     Cette fonction permet de rendre le html en mettant en entrée les 3 queries transversale
     """
-    driver = neo4j_connect_db()
     query29(driver)
     return render_template(
         "transversal.html",
