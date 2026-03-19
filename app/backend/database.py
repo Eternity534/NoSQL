@@ -30,7 +30,7 @@ def init_db(app):
     return mongo
 
 
-def load_mongo_data(json_path="../data/movies.json"):
+def load_mongo_data(json_path="data/movies.json"):
     """
     Ajout des données de la base par défaut.
     Cinéma

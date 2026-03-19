@@ -7,6 +7,12 @@ services:
       - '.env'
     ports:
       - "8080:8080"
+    depends_on:
+      mongo:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+
   mongo:
     image: mongo:7.0
     restart: always
@@ -17,18 +23,30 @@ services:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
-    
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
   neo4j:
     image: neo4j:5.26.22-community-ubi9
     restart: always
     environment:
       - NEO4J_AUTH=neo4j/${NEO4J_PASSWORD}
     ports:
-      - "7474:7474"  # Port pour l'interface web
-      - "7687:7687"  # Port pour Bolt
+      - "7474:7474" # Port pour l'interface web
+      - "7687:7687" # Port pour Bolt
     volumes:
       - neo4j_data:/data/:rw
       - neo4j_conf:/conf:ro
+    healthcheck: # Healthcheck necessaire car l'app ne fonctionne pas si les base neo4j et mongo sont down
+      test: ["CMD", "cypher-shell", "-u", "neo4j", "-p", "${NEO4J_PASSWORD}", "RETURN 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 30s
 
 volumes:
   mongo_data:
