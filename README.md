@@ -1,5 +1,7 @@
 # NoSQL Databases - Project
 
+Lancement de l'application depuis la racine en utilisant la commande `docker compose up -d`
+
 ## Architecture du Projet
 
 Notre projet s'articule de la manière suivante :
@@ -95,13 +97,13 @@ Les secrets de connexion aux différentes bases de données conteneurisé on ét
 Afin de facilité le deploiement de cette application voici un exemple de gestion de secret utilisé pour l'app (fichier `.env.prod`) :
 
 ```.md
-MONGO_URI=mongodb://localhost:27017/entertainment
+MONGO_URI=mongodb://mongo:27017/entertainment
 MONGO_USER=root
 MONGO_PASSWORD=root
-MONGO_HOST=localhost
+MONGO_HOST=mongo
 MONGO_PORT=27017
 MONGO_DB=entertainment
-NEO4J_URI=bolt://localhost:7687
+NEO4J_URI=bolt://neo4j:7687
 NEO4J_USER=neo4j
 NEO4J_PASSWORD=rootroot
 SECRET_KEY=Aezrgrgsg
