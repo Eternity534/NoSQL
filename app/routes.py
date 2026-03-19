@@ -54,3 +54,6 @@ def avg_runtime_per_decade():
     data = query13()
     img = avg_runtime_per_decade_histogramm(data)
     return Response(img.getvalue(), mimetype="image/png")
+
+
+## API pour l'édition des données dans la base mongodb
