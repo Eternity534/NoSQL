@@ -61,7 +61,7 @@ Notre projet s'articule de la manière suivante :
 **static/css**:
 
 - `main.css`: ce fichier gère l'aspect visuelle de notre app.
-  - Transaprence sur l'IA : Utilisation de l'IA afin de corriger de nombreuses erreurs dans notre css. Nous considérions que le focus attendu de ce cours était surtout sur le backend et les queries des bases de données.
+  - Transparence sur l'IA : Utilisation de l'IA afin de corriger de nombreuses erreurs dans notre css. Nous considérions que le focus attendu de ce cours était surtout sur le backend et les queries des bases de données.
 
 **data/**:
 
