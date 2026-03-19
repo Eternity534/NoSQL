@@ -1,5 +1,6 @@
 from app.backend.database import mongo
 
+
 def query27():
     """
     Renvoie les films qui ont des genres en commun mais qui ont des réalisateurs différents
@@ -7,21 +8,29 @@ def query27():
     pipeline = [
         {"$project": {"title": 1, "Director": 1, "genre": {"$split": ["$genre", ","]}}},
         {"$unwind": "$genre"},
-        {"$project": {"title": 1, "Director": 1, "genre": {"$trim": {"input": "$genre"}}}},
-        {"$group": {"_id": "$genre", "films": {"$push": {"title": "$title", "director": "$Director"}}}},
-        {"$match": {"films.1": {"$exists": True}}},
-        {"$project": {
-            "genre": "$_id",
-            "films": {
-                "$filter": {
-                    "input": "$films",
-                    "as": "f",
-                    "cond": True
-                }
+        {
+            "$project": {
+                "title": 1,
+                "Director": 1,
+                "genre": {"$trim": {"input": "$genre"}},
             }
-        }}
+        },
+        {
+            "$group": {
+                "_id": "$genre",
+                "films": {"$push": {"title": "$title", "director": "$Director"}},
+            }
+        },
+        {"$match": {"films.1": {"$exists": True}}},
+        {
+            "$project": {
+                "genre": "$_id",
+                "films": {"$filter": {"input": "$films", "as": "f", "cond": True}},
+            }
+        },
     ]
     return list(mongo.db.films.aggregate(pipeline))
+
 
 def query28(driver, actor_name):
     """
@@ -44,18 +53,27 @@ def query28(driver, actor_name):
         {"$group": {"_id": "$genre", "count": {"$sum": 1}}},
         {"$sort": {"count": -1}},
         {"$limit": 3},
-        {"$lookup": {
-            "from": "films",
-            "let": {"g": "$_id"},
-            "pipeline": [
-                {"$match": {"$expr": {"$regexMatch": {"input": "$genre", "regex": "$$g"}}}},
-                {"$match": {"title": {"$nin": played_titles}}},
-                {"$limit": 5}
-            ],
-            "as": "recommendations"
-        }}
+        {
+            "$lookup": {
+                "from": "films",
+                "let": {"g": "$_id"},
+                "pipeline": [
+                    {
+                        "$match": {
+                            "$expr": {
+                                "$regexMatch": {"input": "$genre", "regex": "$$g"}
+                            }
+                        }
+                    },
+                    {"$match": {"title": {"$nin": played_titles}}},
+                    {"$limit": 5},
+                ],
+                "as": "recommendations",
+            }
+        },
     ]
     return list(mongo.db.films.aggregate(pipeline))
+
 
 def query29(driver):
     """
@@ -70,6 +88,7 @@ def query29(driver):
     """
     with driver.session() as session:
         session.run(query)
+
 
 def query30(driver):
     """
@@ -89,9 +108,14 @@ def query30(driver):
     """
     with driver.session() as session:
         result = session.run(query)
-        return [{"actor": record["actor"], 
-                 "realisateur": record["realisateur"], 
-                 "nb_movies": record["nb_movies"], 
-                 "avg_revenue": record["avg_revenue"], 
-                 "avg_votes": record["avg_votes"], 
-                 "titles": record["titles"]} for record in result]
+        return [
+            {
+                "actor": record["actor"],
+                "realisateur": record["realisateur"],
+                "nb_movies": record["nb_movies"],
+                "avg_revenue": record["avg_revenue"],
+                "avg_votes": record["avg_votes"],
+                "titles": record["titles"],
+            }
+            for record in result
+        ]

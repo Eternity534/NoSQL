@@ -104,6 +104,7 @@ MONGO_DB=entertainment
 NEO4J_URI=bolt://localhost:7687
 NEO4J_USER=neo4j
 NEO4J_PASSWORD=rootroot
+SECRET_KEY=Aezrgrgsg
 ```
 
 ## Documentations utilisée
@@ -111,6 +112,7 @@ NEO4J_PASSWORD=rootroot
 - [Flask](https://flask-fr.readthedocs.io/)
 - [Flask Blueprint](https://flask.palletsprojects.com/en/stable/tutorial/blog/)
 - [Flask Py-mongo](https://flask-pymongo.readthedocs.io/en/latest/)
+- [Flask Flash message](https://flask.palletsprojects.com/en/stable/patterns/flashing/)
 - [Neo4j documentations](https://neo4j.com/docs/)
 - [Neo4j docker volumes documentation](https://neo4j.com/docs/operations-manual/current/docker/mounting-volumes/)
 - [Mongo documentations](https://www.mongodb.com/docs/manual/)

@@ -1,5 +1,6 @@
 from app.backend.database import mongo
 
+
 def query14(driver):
     """
     Renvoie l'acteur ayant joué dans le plus grand nombre de films
@@ -15,6 +16,7 @@ def query14(driver):
         record = result.single()
         return {"name": record["actor_name"], "count": record["movie_count"]}
 
+
 def query15(driver):
     """
     Renvoie les acteurs ayant joué dans des films avec l'actrice Anne Hathaway
@@ -27,6 +29,7 @@ def query15(driver):
     with driver.session() as session:
         result = session.run(query)
         return [record["actor_name"] for record in result]
+
 
 def query16(driver):
     """
@@ -41,6 +44,7 @@ def query16(driver):
         record = result.single()
         return {"name": record["actor_name"], "revenue": record["maxRevenue"]}
 
+
 def query17(driver):
     """
     Renvoie la moyenne des votes
@@ -54,6 +58,7 @@ def query17(driver):
         record = result.single()
         return {"avg_votes": record["avg_votes"]}
 
+
 def query18():
     """
     Renvoie le genre le plus représenté dans la db
@@ -64,9 +69,10 @@ def query18():
         {"$project": {"genre": {"$trim": {"input": "$genre"}}}},
         {"$group": {"_id": "$genre", "total": {"$sum": 1}}},
         {"$sort": {"total": -1}},
-        {"$limit": 1}
+        {"$limit": 1},
     ]
     return list(mongo.db.films.aggregate(pipeline))
+
 
 def query19(driver, name):
     """
@@ -81,6 +87,7 @@ def query19(driver, name):
     with driver.session() as session:
         result = session.run(query, name=name)
         return [record["movieTitle"] for record in result]
+
 
 def query20(driver):
     """
@@ -98,6 +105,7 @@ def query20(driver):
         record = result.single()
         return {"name": record["realisateur"], "count": record["nbActors"]}
 
+
 def query21(driver):
     """
     Renvoie les films les plus connectés (ayant le plus d'acteurs en commun)
@@ -111,7 +119,11 @@ def query21(driver):
     """
     with driver.session() as session:
         result = session.run(query)
-        return [f"{rec['film1']} and {rec['film2']} share {rec['commonActors']} actors" for rec in result]
+        return [
+            f"{rec['film1']} and {rec['film2']} share {rec['commonActors']} actors"
+            for rec in result
+        ]
+
 
 def query22(driver):
     """
@@ -125,21 +137,26 @@ def query22(driver):
     """
     with driver.session() as session:
         result = session.run(query)
-        return [{"actor": record["Actor"], "count": record["nbDirector"]} for record in result]
+        return [
+            {"actor": record["Actor"], "count": record["nbDirector"]}
+            for record in result
+        ]
+
 
 def query23():
     """
     Renvoie le film le plus recommandé pour un acteur en fonction des genres où il a déjà joué
     """
     pipeline = [
-    {"$match": {"Actors": {"$regex": "Anne Hathaway", "$options": "i"}}},
-    {"$project": {"genre": {"$split": ["$genre", ","]}}},
-    {"$unwind": "$genre"},
-    {"$project": {"genre": {"$trim": {"input": "$genre"}}}},
-    {"$group": {"_id": "$genre", "count": {"$sum": 1}}},
-    {"$sort": {"count": -1}}
+        {"$match": {"Actors": {"$regex": "Anne Hathaway", "$options": "i"}}},
+        {"$project": {"genre": {"$split": ["$genre", ","]}}},
+        {"$unwind": "$genre"},
+        {"$project": {"genre": {"$trim": {"input": "$genre"}}}},
+        {"$group": {"_id": "$genre", "count": {"$sum": 1}}},
+        {"$sort": {"count": -1}},
     ]
     return list(mongo.db.films.aggregate(pipeline))
+
 
 def query24(driver):
     """
@@ -153,6 +170,7 @@ def query24(driver):
     """
     with driver.session() as session:
         session.run(query)
+
 
 def query25(driver, name1, name2):
     """
@@ -169,10 +187,13 @@ def query25(driver, name1, name2):
         if not record:
             return "Aucun chemin trouvé."
         path = record["p"]
-        nodes = [node["actor"] if "Actors" in node.labels else node["title"] 
-                 for node in path.nodes]
+        nodes = [
+            node["actor"] if "Actors" in node.labels else node["title"]
+            for node in path.nodes
+        ]
         return " -> ".join(nodes)
-    
+
+
 def query26(driver):
     """
     Renvoie les groupes d'acteurs qui ont tendance à travailler ensemble

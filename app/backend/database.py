@@ -46,18 +46,25 @@ def load_mongo_data(json_path="../data/movies.json"):
     if data:
         collection.insert_many(data)
 
+
+def neo4j_connect_db():
+    neo4j_uri = os.getenv("NEO4J_URI")
+    neo4j_user = os.getenv("NEO4J_USER")
+    neo4j_password = os.getenv("NEO4J_PASSWORD")
+
+    driver = GraphDatabase.driver(neo4j_uri, auth=(neo4j_user, neo4j_password))
+    return driver
+
+
 def load_neo4j_data():
     """
     Importe la data de mongoDB
     Créer les noeuds et relations neo4j
     """
-    neo4j_uri = os.getenv("NEO4J_URI")
-    neo4j_user = os.getenv("NEO4J_USER")
-    neo4j_password = os.getenv("NEO4J_PASSWORD")
 
-    collection_movies = mongo.db.films #récupération du json de mongo
-    movies = [] 
-    for doc in collection_movies.find({}): #envoie la data dans un array pour neo4j
+    collection_movies = mongo.db.films  # récupération du json de mongo
+    movies = []
+    for doc in collection_movies.find({}):  # envoie la data dans un array pour neo4j
         doc["_id"] = str(doc["_id"])
         movies.append(doc)
 
@@ -90,12 +97,9 @@ def load_neo4j_data():
     MERGE (a2)-[:A_JOUER]->(f2)
     RETURN a1.actor, a2.actor
     """
-
-    driver = GraphDatabase.driver(neo4j_uri, auth=(neo4j_user, neo4j_password))
+    driver = neo4j_connect_db()
     with driver.session() as session:
         session.run(REQUEST, list_movies=movies)
         session.run(REQUEST_TEAM)
 
     return driver
-
-
