@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Transversal — CinémaDB</title>
+		<link href="../static/css/main.css" rel="stylesheet">
+	</head>
+	<body>
+
+		{% include 'nav.html' %}
+
+		<h1>Requêtes Transversales</h1>
+
+		<!-- Q27 -->
+		<div class="card">
+			<h2>Question 27</h2>
+			<h3>Quels sont les films qui ont des genres en commun mais des réalisateurs différents ?</h3>
+			{% if q27 %}
+			<ul>
+				{% for item in q27 %}
+				<li>
+					<strong>{{ item.genre }}</strong> —
+					{% for film in item.films %}
+					{{ film.title }} ({{ film.director }}){% if not loop.last %}, {% endif %}
+					{% endfor %}
+				</li>
+				{% endfor %}
+			</ul>
+			{% else %}
+			<span>Aucun résultat</span>
+			{% endif %}
+		</div>
+
+		<!-- Q28 -->
+		<div class="card">
+			<h2>Question 28</h2>
+			<h3>Recommander des films en fonction des préférences de genre d'un acteur</h3>
+			{% if q28 %}
+			{% for item in q28 %}
+			<span class="result">
+				<strong>Genre : {{ item._id }}</strong><br>
+				{% for reco in item.recommendations %}
+				&nbsp;&nbsp;→ {{ reco.title }} ({{ reco.year }})<br>
+				{% endfor %}
+			</span>
+			{% endfor %}
+			{% else %}
+			<span>Aucun résultat</span>
+			{% endif %}
+		</div>
+
+		<!-- Q29 -->
+		<div class="card">
+			<h2>Question 29</h2>
+			<h3>Créer une relation "CONCURRENCE" entre réalisateurs ayant réalisé des films la même année</h3>
+			<span class="result">
+				La relation <strong>CONCURRENCE</strong> a été créée entre tous les réalisateurs
+				ayant sorti des films durant la même année.
+			</span>
+		</div>
+
+		<!-- Q30 -->
+		<div class="card">
+			<h2>Question 30</h2>
+			<h3>Collaborations les plus fréquentes réalisateur/acteur et leur succès commercial ou critique</h3>
+			{% if q30 %}
+			<ul>
+				{% for item in q30 %}
+				<li>
+					<strong>{{ item.acteur }}</strong> &amp; <strong>{{ item.realisateur }}</strong>
+					— {{ item.nb_films }} film(s)
+					— Revenus moy. : {{ item.avg_revenue }} M$
+					— Votes moy. : {{ item.avg_votes | int }}
+				</li>
+				{% endfor %}
+			</ul>
+			{% else %}
+			<span>Aucun résultat</span>
+			{% endif %}
+		</div>
+
+	</body>
+</html>

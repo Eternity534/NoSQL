@@ -47,7 +47,7 @@ def query17(driver):
     """
     query = """
     MATCH (f:films)
-    RETURN avg(f.votes)
+    RETURN avg(f.votes) AS avg_votes
     """
     with driver.session() as session:
         result = session.run(query)
@@ -59,10 +59,10 @@ def query18():
     Renvoie le genre le plus représenté dans la db
     """
     pipeline = [
-        {"$project": {"Genre": {"$split": ["$Genre", ","]}}},
-        {"$unwind": "$Genre"},
-        {"$project": {"Genre": {"$trim": {"input": "$Genre"}}}},
-        {"$group": {"_id": "$Genre", "total": {"$sum": 1}}},
+        {"$project": {"genre": {"$split": ["$genre", ","]}}},
+        {"$unwind": "$genre"},
+        {"$project": {"genre": {"$trim": {"input": "$genre"}}}},
+        {"$group": {"_id": "$genre", "total": {"$sum": 1}}},
         {"$sort": {"total": -1}},
         {"$limit": 1}
     ]
@@ -105,7 +105,7 @@ def query21(driver):
     query = """
     MATCH (f1:films)<-[:A_JOUER]-(a:Actors)-[:A_JOUER]->(f2:films)
     WHERE f1._id < f2._id
-    RETURN f1.title, f2.title, count(a) AS commonActors
+    RETURN f1.title AS film1, f2.title AS film2, count(a) AS commonActors
     ORDER BY commonActors DESC
     LIMIT 5
     """
@@ -132,9 +132,11 @@ def query23():
     Renvoie le film le plus recommandé pour un acteur en fonction des genres où il a déjà joué
     """
     pipeline = [
-    {"$match": {"Actors": {"$regex": "Anne Hathaway"}}},
-    {"$unwind": "$Genre"},
-    {"$group": {"_id": "$Genre", "count": {"$sum": 1}}},
+    {"$match": {"Actors": {"$regex": "Anne Hathaway", "$options": "i"}}},
+    {"$project": {"genre": {"$split": ["$genre", ","]}}},
+    {"$unwind": "$genre"},
+    {"$project": {"genre": {"$trim": {"input": "$genre"}}}},
+    {"$group": {"_id": "$genre", "count": {"$sum": 1}}},
     {"$sort": {"count": -1}}
     ]
     return list(mongo.db.films.aggregate(pipeline))
@@ -177,7 +179,7 @@ def query26(driver):
     """
     query = """
     MATCH (a1:Actors)-[:A_JOUER]->(f:films)<-[:A_JOUER]-(a2:Actors)
-    WHERE a1._id < a2._id
+    WHERE a1.actor < a2.actor
     WITH a1, a2, count(f) AS nb_collaborations, collect(f.title) AS films_communs
     WHERE nb_collaborations > 1
     RETURN a1.actor AS acteur1, a2.actor AS acteur2, nb_collaborations, films_communs

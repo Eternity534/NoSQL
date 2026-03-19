@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Neo4j — CinémaDB</title>
+		<link href="../static/css/main.css" rel="stylesheet">
+	</head>
+	<body>
+
+		{% include 'nav.html' %}
+
+		<h1>Requêtes Neo4j</h1>
+
+		<!-- Q14 -->
+		<div class="card">
+			<h2>Question 14</h2>
+			<h3>Quel est l'acteur ayant joué dans le plus grand nombre de films ?</h3>
+			{% if q14 %}
+			<span class="result">
+				<strong>{{ q14.name }}</strong> est l'acteur ayant joué dans le plus de films avec
+				<strong>{{ q14.count }}</strong> film(s) à son actif.
+			</span>
+			{% else %}
+			<span>Aucun résultat</span>
+			{% endif %}
+		</div>
+
+		<!-- Q15 -->
+		<div class="card">
+			<h2>Question 15</h2>
+			<h3>Quels acteurs ont joué dans des films avec Anne Hathaway ?</h3>
+			{% if q15 %}
+			<ul>
+				{% for actor in q15 %}
+				<li>{{ actor }}</li>
+				{% endfor %}
+			</ul>
+			{% else %}
+			<span>Aucun résultat</span>
+			{% endif %}
+		</div>
+
+		<!-- Q16 -->
+		<div class="card">
+			<h2>Question 16</h2>
+			<h3>Quel acteur a joué dans des films totalisant le plus de revenus ?</h3>
+			{% if q16 %}
+			<span class="result">
+				<strong>{{ q16.name }}</strong> totalise
+				<strong>{{ q16.revenue | round(2) }} M$</strong> de revenus cumulés.
+			</span>
+			{% else %}
+			<span>Aucun résultat</span>
+			{% endif %}
+		</div>
+
+		<!-- Q17 -->
+		<div class="card">
+			<h2>Question 17</h2>
+			<h3>Quelle est la moyenne des votes de tous les films ?</h3>
+			{% if q17 %}
+			<span class="result">
+				La moyenne des votes est de <strong>{{ q17.avg_votes | round(0) | int }}</strong> votes par film.
+			</span>
+			{% else %}
+			<span>Aucun résultat</span>
+			{% endif %}
+		</div>
+
+		<!-- Q18 -->
+		<div class="card">
+			<h2>Question 18</h2>
+			<h3>Quel est le genre le plus représenté dans la base ?</h3>
+			{% if q18 %}
+			<span class="result">
+				Le genre le plus représenté est <strong>{{ q18[0]._id }}</strong>
+				avec <strong>{{ q18[0].total }}</strong> film(s).
+			</span>
+			{% else %}
+			<span>Aucun résultat</span>
+			{% endif %}
+		</div>
+
+		<!-- Q19 -->
+		<div class="card">
+			<h2>Question 19</h2>
+			<h3>Dans quels autres films ont joué les acteurs qui ont partagé l'affiche avec nous ?</h3>
+			{% if q19 %}
+			<ul>
+				{% for title in q19 %}
+				<li>{{ title }}</li>
+				{% endfor %}
+			</ul>
+			{% else %}
+			<span>Aucun résultat</span>
+			{% endif %}
+		</div>
+
+		<!-- Q20 -->
+		<div class="card">
+			<h2>Question 20</h2>
+			<h3>Quel réalisateur a travaillé avec le plus d'acteurs distincts ?</h3>
+			{% if q20 %}
+			<span class="result">
+				<strong>{{ q20.name }}</strong> a collaboré avec
+				<strong>{{ q20.count }}</strong> acteur(s) distincts.
+			</span>
+			{% else %}
+			<span>Aucun résultat</span>
+			{% endif %}
+		</div>
+
+		<!-- Q21 -->
+		<div class="card">
+			<h2>Question 21</h2>
+			<h3>Quels sont les 5 films ayant le plus d'acteurs en commun ?</h3>
+			{% if q21 %}
+			<ul>
+				{% for item in q21 %}
+				<li>{{ item }}</li>
+				{% endfor %}
+			</ul>
+			{% else %}
+			<span>Aucun résultat</span>
+			{% endif %}
+		</div>
+
+		<!-- Q22 -->
+		<div class="card">
+			<h2>Question 22</h2>
+			<h3>Quels sont les 5 acteurs ayant joué avec le plus de réalisateurs différents ?</h3>
+			{% if q22 %}
+			<ul>
+				{% for item in q22 %}
+				<li><strong>{{ item.actor }}</strong> — {{ item.count }} réalisateur(s)</li>
+				{% endfor %}
+			</ul>
+			{% else %}
+			<span>Aucun résultat</span>
+			{% endif %}
+		</div>
+
+		<!-- Q23 -->
+		<div class="card">
+			<h2>Question 23</h2>
+			<h3>Quels genres Anne Hathaway préfère-t-elle ? (recommandation par genre)</h3>
+			{% if q23 %}
+			<ul>
+				{% for item in q23 %}
+				<li><strong>{{ item._id }}</strong> — {{ item.count }} film(s)</li>
+				{% endfor %}
+			</ul>
+			{% else %}
+			<span>Aucun résultat</span>
+			{% endif %}
+		</div>
+
+		<!-- Q24 -->
+		<div class="card">
+			<h2>Question 24</h2>
+			<h3>Création de la relation INFLUENCE_PAR entre réalisateurs ayant des acteurs en commun</h3>
+			<span class="result">
+				La relation <strong>INFLUENCE_PAR</strong> a été créée entre tous les réalisateurs
+				partageant au moins un acteur en commun.
+			</span>
+		</div>
+
+		<!-- Q25 -->
+		<div class="card">
+			<h2>Question 25</h2>
+			<h3>Quel est le chemin le plus court entre deux acteurs ?</h3>
+			{% if q25 %}
+			<span class="result">{{ q25 }}</span>
+			{% else %}
+			<span>Aucun résultat</span>
+			{% endif %}
+		</div>
+
+		<!-- Q26 -->
+		<div class="card">
+			<h2>Question 26</h2>
+			<h3>Quels acteurs ont tendance à travailler ensemble ?</h3>
+			{% if q26 %}
+			<ul>
+				{% for item in q26 %}
+				<li>
+					<strong>{{ item.acteur1 }}</strong> &amp; <strong>{{ item.acteur2 }}</strong>
+					— {{ item.nb_collaborations }} film(s) en commun
+				</li>
+				{% endfor %}
+			</ul>
+			{% else %}
+			<span>Aucun résultat</span>
+			{% endif %}
+		</div>
+
+	</body>
+</html>
