@@ -78,6 +78,7 @@ def query30(driver):
     """
     query = """
     MATCH (a:Actors)-[:A_JOUER]->(f:films)
+    WHERE f.revenue IS NOT NULL AND f.votes IS NOT NULL AND toString(f.revenue) <> '' AND toString(f.votes) <> ''
     WITH a, f.director AS realisateur, count(f) AS nb_movies,
         avg(f.revenue) AS avg_revenue, avg(f.votes) AS avg_votes,
         collect(f.title) AS titles
@@ -88,4 +89,9 @@ def query30(driver):
     """
     with driver.session() as session:
         result = session.run(query)
-        return [dict(record) for record in result]
+        return [{"actor": record["actor"], 
+                 "realisateur": record["realisateur"], 
+                 "nb_movies": record["nb_movies"], 
+                 "avg_revenue": record["avg_revenue"], 
+                 "avg_votes": record["avg_votes"], 
+                 "titles": record["titles"]} for record in result]

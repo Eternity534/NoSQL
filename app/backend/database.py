@@ -96,4 +96,6 @@ def load_neo4j_data():
         session.run(REQUEST, list_movies=movies)
         session.run(REQUEST_TEAM)
 
+    return driver
+
 

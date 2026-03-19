@@ -19,7 +19,7 @@ SECRET_KEY=SECRET,
 """
 mongo = init_db(app)
 load_mongo_data()
-load_neo4j_data()
+driver = load_neo4j_data()
 from app.routes import bp
 
 # Enregistrement automatique dans l'application flask des routes dans le fichier routes.py
